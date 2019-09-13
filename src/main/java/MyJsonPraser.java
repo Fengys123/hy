@@ -1,18 +1,16 @@
 import com.dlut.entity;
 import com.google.gson.*;
-import org.junit.Test;
 
-import	java.util.ArrayList;
+import java.util.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
 
 import	java.io.FileReader;
-import java.util.Map;
 
 public class MyJsonPraser {
     private static final String path = "C:\\Users\\fys\\Desktop\\meal-db\\";
+
+    private static final Map<String ,entity> mealsmap = mealsJsonToMap();
 
     public List<String> areasJsonToList() throws IOException {
         List<String> resultList = new ArrayList<>();
@@ -28,9 +26,14 @@ public class MyJsonPraser {
         return resultList;
     }
 
-    public Map<String ,entity> mealsJsonToMap() throws IOException {
+    public static Map<String ,entity> mealsJsonToMap() {
         Map<String, entity> resultMap = new HashMap<>(30);
-        String strJsonFromFile = getStrJsonFromFile(path + "meals.json");
+        String strJsonFromFile = null;
+        try {
+            strJsonFromFile = getStrJsonFromFile(path + "111.json");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         JsonParser jsonParser = new JsonParser();
         Gson gson = new Gson();
         JsonObject jsonObject = jsonParser.parse(strJsonFromFile).getAsJsonObject();
@@ -44,32 +47,71 @@ public class MyJsonPraser {
         return resultMap;
     }
 
+    public void buildTree(JsonArray ja){
+        Set<String> strings = mealsmap.keySet();
+        for (String string : strings) {
+            entity entity = mealsmap.get(string);
+            String area = entity.getArea();
+            String category = entity.getCategory();
+            String name = entity.getName();
+            List<String> ingredients = entity.getIngredients();
+            JsonArray ja1 = doJudgeContains(ja,area);
+            if (ja1 == null) {
+                ja1 = new JsonArray();
+                JsonObject jo1 = new JsonObject();
+                jo1.addProperty("name", area);
+                jo1.add("children", ja1);
+                ja.add(jo1);
+            }
 
-    /**
-     * {
-     *     "name" : ,"meals",
-     *     "children" : [
-     *          "name" : "china"
-     *          "children" : [
-     *              "name" : "kauican"
-     *              "children" : [
-     *                  "name" : "shutiao"
-     *                  "children" : [
-     *                      "name" : "tudou"
-     *                  ]
-     *              ]
-     *          ]
-     *     ]
-     * }
-     */
-    public JsonObject convertToNeedFormat()
+            JsonArray ja2 = doJudgeContains(ja1,category);
+            if (ja2 == null) {
+                ja2 = new JsonArray();
+                JsonObject jo1 = new JsonObject();
+                jo1.addProperty("name", category);
+                jo1.add("children", ja2);
+                ja1.add(jo1);
+            }
+
+            JsonArray ja3 = doJudgeContains(ja2,name);
+            if (ja3 == null) {
+                ja3 = new JsonArray();
+                JsonObject jo1 = new JsonObject();
+                jo1.addProperty("name", name);
+                jo1.add("children", ja3);
+                ja2.add(jo1);
+            }
+
+            JsonArray ja4 = doJudgeContains(ja3,ingredients.get(0));
+            if (ja4 == null) {
+                for (String ingredient : ingredients) {
+                    JsonObject jo1 = new JsonObject();
+                    jo1.addProperty("name", ingredient);
+                    ja3.add(jo1);
+                }
+            }
+
+        }
+
+    }
+
+    public JsonArray doJudgeContains(JsonArray ja, String strValue)
     {
+        if(ja == null)
+        {
+            return null;
+        }
+        for (JsonElement jsonElement : ja) {
+            JsonElement name = jsonElement.getAsJsonObject().get("name");
+            if(name != null && name.getAsString().equals(strValue))
+            {
+                return (JsonArray)jsonElement.getAsJsonObject().get("children");
+            }
+        }
         return null;
     }
 
-
-
-    private String getStrJsonFromFile(String path) throws IOException {
+    private static String getStrJsonFromFile(String path) throws IOException {
         FileReader fileReader = new FileReader(new File(path));
         char cbuf[] = new char[1024];
         int i;
@@ -81,30 +123,5 @@ public class MyJsonPraser {
             }
         }
         return strJson;
-    }
-
-    @Test
-    public void test() throws IOException {
-        areasJsonToList();
-    }
-
-    @Test
-    public void jsonToString() {
-        JsonArray ja = new JsonArray();
-        for (int i = 0; i < 10; i++) {
-            ja.add(i);
-        }
-        System.out.println(ja.toString());
-    }
-
-    @Test
-    public void stringToJson() {
-        String s = "[0,1,2,3,4,5,6,7,8,9]";
-        JsonArray asJsonArray = new JsonParser().parse(s).getAsJsonArray();
-    }
-
-    @Test
-    public void testmealsJsonToMap() throws IOException {
-        mealsJsonToMap();
     }
 }
