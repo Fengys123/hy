@@ -1,5 +1,6 @@
 import com.dlut.entity;
 import com.google.gson.*;
+import org.junit.Test;
 
 import java.util.*;
 import java.io.File;
@@ -30,7 +31,7 @@ public class MyJsonPraser {
         Map<String, entity> resultMap = new HashMap<>(30);
         String strJsonFromFile = null;
         try {
-            strJsonFromFile = getStrJsonFromFile(path + "111.json");
+            strJsonFromFile = getStrJsonFromFile(path + "meals.json");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,11 +41,20 @@ public class MyJsonPraser {
         for (String s : jsonObject.keySet()) {
             JsonElement jsonElement = jsonObject.get(s);
             String asString = gson.toJson(jsonElement);
-            System.out.println(asString);
             entity entity = gson.fromJson(asString, entity.class);
             resultMap.put(s, entity);
         }
         return resultMap;
+    }
+
+    @Test
+    public void test() {
+        JsonObject Jo = new JsonObject();
+        Jo.addProperty("name","meal");
+        JsonArray jsonArray = new JsonArray();
+        buildTree(jsonArray);
+        Jo.add("children",jsonArray);
+        System.out.println(Jo.toString());
     }
 
     public void buildTree(JsonArray ja){
