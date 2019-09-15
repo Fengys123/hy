@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="GB2312"?> 
+<RESULT> 
+<VALUE>
+<NO>A1234</NO> 
+ <ADDR>山西</ADDR>
+</VALUE> 
+<VALUE> 
+<NO>B1234</NO> 
+<ADDR>山东</ADDR> 
+</VALUE> 
+</RESULT>
