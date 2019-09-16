@@ -17,16 +17,13 @@ public class MyXmlPraser {
     private final int size_movie = 28;
     private final int size_people = 28;
 
-    private int x = 0;
-    private int y = 0;
+    Random random = new Random(System.currentTimeMillis());
 
     public Map<String,Integer> getPosition(){
-        Random random = new Random(System.currentTimeMillis());
-        x = random.nextInt(600);
-        y = random.nextInt(600);
+
         Map<String,Integer> map = new HashMap<>();
-        map.put("x",x);
-        map.put("y",y);
+        map.put("x",new Integer(random.nextInt(600)));
+        map.put("y",new Integer(random.nextInt(600)));
         return map;
     }
 
@@ -39,7 +36,7 @@ public class MyXmlPraser {
         Element nodes = createNodes(root);
         Element edges = createEdges(root);
 
-        File f = new File("C:\\Users\\fengy\\Desktop\\test.xml");
+        File f = new File("C:\\Users\\fys\\Desktop\\test1.xml");
         SAXReader reader = new SAXReader();
         Document document = reader.read(f);
         Element rot = document.getRootElement();
@@ -85,9 +82,9 @@ public class MyXmlPraser {
         node.addAttribute("label", label);
 
         Element element1 = node.addElement("attvalues");
-        element1.addElement("attvalue");
-        element1.addAttribute("for","modularity_class");
-        element1.addAttribute("value","7");
+        Element attvalue = element1.addElement("attvalue");
+        attvalue.addAttribute("for","modularity_class");
+        attvalue.addAttribute("value","0");
 
         Element viz_size = node.addElement("viz:size");
         viz_size.addAttribute("value",String.valueOf(size_people));
@@ -97,15 +94,21 @@ public class MyXmlPraser {
         viz_position.addAttribute("y", String.valueOf(position.get("y")));
         viz_position.addAttribute("z", String.valueOf(0));
         Element viz_color = node.addElement("viz:color");
-        viz_color.addAttribute("r", String.valueOf(22));
-        viz_color.addAttribute("g", String.valueOf(0));
-        viz_color.addAttribute("b", String.valueOf(123));
+        viz_color.addAttribute("r", String.valueOf(236));
+        viz_color.addAttribute("g", String.valueOf(81));
+        viz_color.addAttribute("b", String.valueOf(72));
     }
 
     public void createNodeOfMovie(Element element, String id, String label) {
         Element node = element.addElement("node");
         node.addAttribute("id", id);
         node.addAttribute("label",label);
+
+        Element element1 = node.addElement("attvalues");
+        Element attvalue = element1.addElement("attvalue");
+        attvalue.addAttribute("for","modularity_class");
+        attvalue.addAttribute("value","7");
+
         Element viz_size = node.addElement("viz:size");
         viz_size.addAttribute("value",String.valueOf(size_movie));
         Element viz_position = node.addElement("viz:position");
