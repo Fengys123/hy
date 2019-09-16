@@ -13,7 +13,7 @@ public class MyJsonPraser {
 
     private static final Map<String ,entity> mealsmap = mealsJsonToMap();
 
-    public List<String> areasJsonToList() throws IOException {
+    private List<String> areasJsonToList() throws IOException {
         List<String> resultList = new ArrayList<>();
         String strJsonFromFile = getStrJsonFromFile(path + "areas.json");
         JsonParser jsonParser = new JsonParser();
@@ -27,7 +27,7 @@ public class MyJsonPraser {
         return resultList;
     }
 
-    public static Map<String ,entity> mealsJsonToMap() {
+    private static Map<String ,entity> mealsJsonToMap() {
         Map<String, entity> resultMap = new HashMap<>(30);
         String strJsonFromFile = null;
         try {
@@ -105,7 +105,7 @@ public class MyJsonPraser {
 
     }
 
-    public JsonArray doJudgeContains(JsonArray ja, String strValue)
+    private JsonArray doJudgeContains(JsonArray ja, String strValue)
     {
         if(ja == null)
         {
