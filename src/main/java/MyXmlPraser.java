@@ -27,6 +27,52 @@ public class MyXmlPraser {
         return map;
     }
 
+    public int x0 = 100;
+    public int x1 = 1100;
+    public int x2 = 2100;
+    public int x3 = 3100;
+
+
+    boolean flag1 = true;
+    public int y_hero1 = 0;
+    public int y_hero2 = 0;
+    public Map<String,Integer> getPositionOfHero(){
+
+        Map<String,Integer> map = new HashMap<>();
+        if(flag) {
+            map.put("x",new Integer(x1));
+            map.put("y",new Integer(y_hero1));
+            y_hero1 = y_hero1 + 250;
+            flag = false;
+        } else {
+            map.put("x",new Integer(x2));
+            map.put("y",new Integer(y_hero2));
+            y_hero2 = y_hero2 + 250;
+            flag = true;
+        }
+        return map;
+    }
+
+    boolean flag = true;
+    public int y_movie1 = 500;
+    public int y_movie2 = 500;
+    public Map<String,Integer> getPositionOfMovie(){
+
+        Map<String,Integer> map = new HashMap<>();
+        if(flag) {
+            map.put("x",new Integer(x0));
+            map.put("y",new Integer(y_movie1));
+            y_movie1 = y_movie1 + 200;
+            flag = false;
+        } else {
+            map.put("x",new Integer(x3));
+            map.put("y",new Integer(y_movie2));
+            y_movie2 = y_movie2 + 200;
+            flag = true;
+        }
+        return map;
+    }
+
     @Test
     public void buildXML() throws DocumentException, UnsupportedEncodingException {
         Document doc = DocumentHelper.createDocument();
@@ -89,7 +135,7 @@ public class MyXmlPraser {
         Element viz_size = node.addElement("viz:size");
         viz_size.addAttribute("value",String.valueOf(size_people));
         Element viz_position = node.addElement("viz:position");
-        Map<String, Integer> position = getPosition();
+        Map<String, Integer> position = getPositionOfHero();
         viz_position.addAttribute("x", String.valueOf(position.get("x")));
         viz_position.addAttribute("y", String.valueOf(position.get("y")));
         viz_position.addAttribute("z", String.valueOf(0));
@@ -112,7 +158,7 @@ public class MyXmlPraser {
         Element viz_size = node.addElement("viz:size");
         viz_size.addAttribute("value",String.valueOf(size_movie));
         Element viz_position = node.addElement("viz:position");
-        Map<String, Integer> position = getPosition();
+        Map<String, Integer> position = getPositionOfMovie();
         viz_position.addAttribute("x", String.valueOf(position.get("x")));
         viz_position.addAttribute("y", String.valueOf(position.get("y")));
         viz_position.addAttribute("z", String.valueOf(0));
